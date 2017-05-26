@@ -127,6 +127,7 @@ class BraveSettingsView : AppSettingsTableViewController {
                     BoolSetting(prefs: prefs, prefKey: kPrefKeyBrowserLock, defaultValue: false, titleText: Strings.Browser_Lock, statusText: nil, settingDidChange: { isOn in
                         if isOn {
                             let view = PinViewController()
+                            view.delegate = self
                             self.navigationController?.pushViewController(view, animated: true)
                         }
                     }),
@@ -158,6 +159,15 @@ class BraveSettingsView : AppSettingsTableViewController {
                 ])
         ]
         return settings
+    }
+}
+
+extension BraveSettingsView : PinViewControllerDelegate {
+    func pinViewController(completed: Bool) {
+        if !completed {
+            profile.prefs.setBool(false, forKey: kPrefKeyBrowserLock)
+            tableView.reloadData()
+        }
     }
 }
 
