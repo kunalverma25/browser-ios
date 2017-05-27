@@ -122,6 +122,7 @@ class PinProtectOverlayViewController: UIViewController {
     var blur: UIVisualEffectView!
     var pinView: PinLockView!
     
+    var touchCanceled: Bool = false
     var successCallback: (() -> Void)?
     
     override func loadView() {
@@ -162,11 +163,28 @@ class PinProtectOverlayViewController: UIViewController {
         start()
     }
     
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.Portrait
+    }
+    
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
+    
+    override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+        return UIInterfaceOrientation.Portrait
+    }
+    
     func start() {
         pinView.hidden = true
+        touchCanceled = false
     }
     
     func auth() {
+        if touchCanceled {
+            return
+        }
+        
         var authError: NSError? = nil
         let authenticationContext = LAContext()
         if authenticationContext.canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: &authError) {
@@ -180,7 +198,8 @@ class PinProtectOverlayViewController: UIViewController {
                         }
                     }
                     else {
-                        postAsyncToMain(0.1) {
+                        self.touchCanceled = true
+                        postAsyncToMain {
                             self.pinView.hidden = false
                         }
                     }

@@ -329,7 +329,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         let profile = getProfile(application)
-        if profile.prefs.boolForKey(kPrefKeyBrowserLock) == true {
+        if profile.prefs.boolForKey(kPrefKeyBrowserLock) == true && securityWindow?.hidden == false {
             securityViewController?.auth()
         }
     }
@@ -346,8 +346,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillResignActive(application: UIApplication) {
         BraveGlobalShieldStats.singleton.save()
         
-//        let profile = getProfile(application)
-//        requirePinIfNeeded(profile)
+        let profile = getProfile(application)
+        requirePinIfNeeded(profile)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
