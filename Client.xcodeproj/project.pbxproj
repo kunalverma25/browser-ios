@@ -229,6 +229,7 @@
 		5C44C0DE1E3EE47B00B1FD81 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C44C0DD1E3EE47B00B1FD81 /* History.swift */; };
 		5C67126F8B355442E99D9EDB /* BrowserViewController+FindInPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA9175CB5140E6C4D47DC15 /* BrowserViewController+FindInPage.swift */; };
 		5C6F1B1D1E67433F008B0ADD /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6F1B1C1E67433F008B0ADD /* CoreImage.framework */; };
+		5C727E2D1F16A1E0007038A3 /* PinController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C727E2C1F16A1E0007038A3 /* PinController.swift */; };
 		5C82452C1E68E95600D3CA09 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C82452B1E68E95600D3CA09 /* AVFoundation.framework */; };
 		5CD164111EDFB6FF0037ECCC /* SQLite.swift in Resources */ = {isa = PBXBuildFile; fileRef = 5CD164101EDFB6FF0037ECCC /* SQLite.swift */; };
 		5CD7F38E1E3EFBF100A12BB9 /* FaviconMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD7F38D1E3EFBF100A12BB9 /* FaviconMO.swift */; };
@@ -1151,6 +1152,7 @@
 		5C44C0D91E3EE42D00B1FD81 /* Domain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Domain.swift; path = brave/src/data/Domain.swift; sourceTree = "<group>"; };
 		5C44C0DD1E3EE47B00B1FD81 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = History.swift; path = brave/src/data/History.swift; sourceTree = "<group>"; };
 		5C6F1B1C1E67433F008B0ADD /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		5C727E2C1F16A1E0007038A3 /* PinController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinController.swift; path = brave/src/frontend/PinController.swift; sourceTree = "<group>"; };
 		5C82452B1E68E95600D3CA09 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5CD164101EDFB6FF0037ECCC /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SQLite.swift; path = ThirdParty/SQLite.swift; sourceTree = "<group>"; };
 		5CD164121EDFB7080037ECCC /* SQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SQLite.xcodeproj; path = ThirdParty/SQLite.swift/SQLite.xcodeproj; sourceTree = "<group>"; };
@@ -1745,6 +1747,7 @@
 				5C0FCE4B1E5FB32F0016DF0F /* sync */,
 				3A6E86EA8E9535F4C6C7B748 /* tabsbar */,
 				5CE70E441E022FAB008B307A /* BraveShieldStatsView.swift */,
+				5C727E2C1F16A1E0007038A3 /* PinController.swift */,
 			);
 			name = frontend;
 			sourceTree = "<group>";
@@ -4454,6 +4457,7 @@
 				1C1BD844C67E5F9C40F06A40 /* ReaderModeStyleViewController.swift in Sources */,
 				52808425834F70D43948B2AB /* ReaderModeUtils.swift in Sources */,
 				B4AC7FC0F7D974AD0BA32C3A /* AppSettingsOptions.swift in Sources */,
+				5C727E2D1F16A1E0007038A3 /* PinController.swift in Sources */,
 				A56B5847463CCB600331AE73 /* AppSettingsTableViewController.swift in Sources */,
 				4A6B728ACF11D1753EB947C3 /* Clearables.swift in Sources */,
 				C430DD4BD879C97025E308CB /* ClearPrivateDataTableViewController.swift in Sources */,

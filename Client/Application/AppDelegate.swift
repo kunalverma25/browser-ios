@@ -327,16 +327,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
                 self.launchFromURL(params)
             }
         }
+        
+        let profile = getProfile(application)
+        if profile.prefs.boolForKey(kPrefKeyBrowserLock) == true && securityWindow?.hidden == false {
+            securityViewController?.auth()
+        }
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         print("Close database")
         shutdownProfileWhenNotActive()
         BraveGlobalShieldStats.singleton.save()
+        
+        let profile = getProfile(application)
+        requirePinIfNeeded(profile)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
         BraveGlobalShieldStats.singleton.save()
+        
+        let profile = getProfile(application)
+        requirePinIfNeeded(profile)
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -346,6 +357,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
         self.updateAuthenticationInfo()
 
         profile?.reopen()
+        
+        let appProfile = getProfile(application)
+        requirePinIfNeeded(appProfile)
+    }
+    
+    private func requirePinIfNeeded(profile: Profile) {
+        // Check for browserLock settings
+        if profile.prefs.boolForKey(kPrefKeyBrowserLock) == true {
+            if securityWindow != nil  {
+                securityViewController?.start()
+                securityWindow?.hidden = false
+                return
+            }
+            
+            let vc = PinProtectOverlayViewController()
+            securityViewController = vc
+            debugPrint(UIScreen.mainScreen().bounds)
+            
+            let pinOverlay = UIWindow(frame: UIScreen.mainScreen().bounds)
+            pinOverlay.backgroundColor = UIColor(white: 0.9, alpha: 0.7)
+            pinOverlay.windowLevel = UIWindowLevelAlert
+            pinOverlay.rootViewController = vc
+            securityWindow = pinOverlay
+            pinOverlay.makeKeyAndVisible()
+            
+            vc.successCallback = {
+                self.securityWindow?.hidden = true
+            }
+        }
     }
 
     fileprivate func updateAuthenticationInfo() {
