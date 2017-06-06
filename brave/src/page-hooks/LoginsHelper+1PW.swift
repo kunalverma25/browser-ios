@@ -19,7 +19,7 @@ let kPrefName3rdPartyPasswordShortcutEnabled = "thirdPartyPasswordShortcutEnable
 
 enum ThirdPartyPasswordManagerType: Int {
     case ShowPicker = 0
-    case OnePassword, LastPass, Bitwarden
+    case OnePassword, LastPass, Bitwarden, TrueKey
     
     var prefId: Int { return self.rawValue }
     
@@ -55,20 +55,23 @@ enum ThirdPartyPasswordManagerType: Int {
             return .LastPass
         } else if action.contains("bitwarden") {
             return .Bitwarden
+        } else if action.contains("truekey") {
+            return .TrueKey
         }
         return nil
     }
     
     // Must have explicit type
     // ALL PM types from above enum
-    static private let PMTypes = [ ThirdPartyPasswordManagerType.ShowPicker, .OnePassword, .LastPass, .Bitwarden ]
+    static private let PMTypes = [ ThirdPartyPasswordManagerType.ShowPicker, .OnePassword, .LastPass, .Bitwarden, .TrueKey ]
     
     // Titles to be displayed for user selection/view
     static private let PMDisplayTitles: [ThirdPartyPasswordManagerType: String] = [
         .ShowPicker : "Show picker",
         .OnePassword : "1Password",
         .LastPass : "LastPass",
-        .Bitwarden : "bitwarden"
+        .Bitwarden : "bitwarden",
+        .TrueKey : "True Key"
     ]
     
     // PM image names
@@ -76,7 +79,8 @@ enum ThirdPartyPasswordManagerType: Int {
         .ShowPicker: "key",
         .OnePassword : "passhelper_1pwd",
         .LastPass : "passhelper_lastpass",
-        .Bitwarden : "passhelper_bitwarden"
+        .Bitwarden : "passhelper_bitwarden",
+        .TrueKey : "passhelper_truekey"
     ]
 }
 
@@ -190,7 +194,7 @@ extension LoginsHelper {
         managerButton.frame = managerButtonFrame
     }
 
-    // recurse through items until the 1pw/lastpass/bitwarden share item is found
+    // recurse through items until the 1pw/lastpass/bitwarden/truekey share item is found
     private func selectShareItem(view: UIView, shareItemName: String) -> Bool {
         if shareItemName.characters.count == 0 {
             return false
