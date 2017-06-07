@@ -65,6 +65,7 @@ extension Strings {
     public static let Settings = NSLocalizedString("Settings", comment: "")
     public static let Done = NSLocalizedString("Done", comment: "")
     public static let Privacy = NSLocalizedString("Privacy", comment: "Settings privacy section title")
+    public static let Security = NSLocalizedString("Security", comment: "Settings security section title")
     public static let BlockPopupWindows = NSLocalizedString("Block Pop-up Windows", comment: "Block pop-up windows setting")
     public static let Save_Logins = NSLocalizedString("Save Logins", comment: "Setting to enable the built-in password manager")
 
@@ -218,8 +219,8 @@ extension Strings {
     public static let PinNew = NSLocalizedString("Enter New Pin", comment: "Browser Lock New Pin")
     public static let PinNewRe = NSLocalizedString("Re-Enter New Pin", comment: "Browser Lock Re-Enter New Pin")
     public static let PinSet = NSLocalizedString("Set Pin", comment: "Browser Lock Set Pin")
-    public static let PinEnterToUnlock = NSLocalizedString("Enter Pin to Un-lock Brave", comment: "Unlock Brave with Browser Lock Pin")
-    public static let PinFingerprintUnlock = NSLocalizedString("Use your fingerprint to un-lock Brave.", comment: "Unlock Brave with fingerprint.")
+    public static let PinEnterToUnlock = NSLocalizedString("Enter Pin to Unlock Brave", comment: "Unlock Brave with Browser Lock Pin")
+    public static let PinFingerprintUnlock = NSLocalizedString("Use your fingerprint to unlock Brave.", comment: "Unlock Brave with fingerprint.")
     public static let Close_Private_Tabs = NSLocalizedString("Close Private Tabs", comment: "Setting for closing private tabs")
     public static let When_Leaving_Private_Browsing = NSLocalizedString("When Leaving Private Browsing", comment: "Will be displayed in Settings under 'Close Private Tabs'")
     public static let Saved_Logins = NSLocalizedString("Saved Logins", comment: "Settings item for clearing passwords and login data")

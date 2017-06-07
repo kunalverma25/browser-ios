@@ -123,15 +123,17 @@ class BraveSettingsView : AppSettingsTableViewController {
                 [ClearPrivateDataSetting(settings: self), CookieSetting(profile: self.profile),
                     BoolSetting(prefs: prefs, prefKey: kPrefKeyPrivateBrowsingAlwaysOn, defaultValue: false, titleText: Strings.Private_Browsing_Only, statusText: nil, settingDidChange: { isOn in
                         getApp().browserViewController.switchBrowsingMode(toPrivate: isOn)
-                    }),
-                    BoolSetting(prefs: prefs, prefKey: kPrefKeyBrowserLock, defaultValue: false, titleText: Strings.Browser_Lock, statusText: nil, settingDidChange: { isOn in
+                    })]
+            ),
+            SettingSection(title: NSAttributedString(string: Strings.Security.uppercaseString), children:
+                [BoolSetting(prefs: prefs, prefKey: kPrefKeyBrowserLock, defaultValue: false, titleText: Strings.Browser_Lock, statusText: nil, settingDidChange: { isOn in
                         if isOn {
                             let view = PinViewController()
                             view.delegate = self
                             self.navigationController?.pushViewController(view, animated: true)
                         }
                     }),
-                ChangePinSetting(settings: self)]
+                    ChangePinSetting(settings: self)]
             ),
             SettingSection(title: NSAttributedString(string: Strings.Brave_Shield_Defaults.uppercaseString), children: shieldSettingsList)]
 

@@ -50,11 +50,9 @@ class PinViewController: UIViewController, PinViewControllerDelegate {
         view.addSubview(pinView)
         
         let pinViewSize = pinView.frame.size
-        let xEdge = (view.frame.width - pinViewSize.width) / 2
-        let yEdge = (view.frame.height - pinViewSize.height) / 2
-        
         pinView.snp_makeConstraints { (make) in
-            make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
+            make.size.equalTo(pinViewSize)
+            make.center.equalTo(self.view.center).offset(CGPointMake(0, 0))
         }
         
         title = Strings.PinSet
@@ -95,11 +93,9 @@ class ConfirmPinViewController: UIViewController {
         view.addSubview(pinView)
         
         let pinViewSize = pinView.frame.size
-        let xEdge = (view.frame.width - pinViewSize.width) / 2
-        let yEdge = (view.frame.height - pinViewSize.height) / 2
-        
         pinView.snp_makeConstraints { (make) in
-            make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
+            make.size.equalTo(pinViewSize)
+            make.center.equalTo(self.view.center).offset(CGPointMake(0, 0))
         }
         
         title = Strings.PinSet
@@ -144,15 +140,13 @@ class PinProtectOverlayViewController: UIViewController {
         view.addSubview(pinView)
         
         let pinViewSize = pinView.frame.size
-        let xEdge = (UIScreen.mainScreen().bounds.width - pinViewSize.width) / 2
-        let yEdge = (UIScreen.mainScreen().bounds.height - pinViewSize.height) / 2
-        
         pinView.snp_makeConstraints { (make) in
-            make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
+            make.size.equalTo(pinViewSize)
+            make.center.equalTo(self.view.center).offset(CGPointMake(0, 0))
         }
         
         blur.snp_makeConstraints { (make) in
-            make.edges.equalTo(view.self)
+            make.edges.equalTo(self.view)
         }
         
         start()
@@ -248,14 +242,12 @@ class PinLockView: UIView {
         deleteButton.sizeToFit()
         addSubview(deleteButton)
         
-        setNeedsLayout()
-        layoutIfNeeded()
-        
+        layoutSubviews()
         sizeToFit()
     }
     
     override func layoutSubviews() {
-        let spaceX: CGFloat = (min(UIScreen.mainScreen().bounds.width - 20, 350) - PinUX.ButtonSize.width * 3) / 4
+        let spaceX: CGFloat = (350 - PinUX.ButtonSize.width * 3) / 4
         let spaceY: CGFloat = spaceX
         let w: CGFloat = PinUX.ButtonSize.width
         let h: CGFloat = PinUX.ButtonSize.height
@@ -308,10 +300,11 @@ class PinLockView: UIView {
         
         let w = button9.frame.maxX
         let h = button0.frame.maxY
-        var f = frame
+        var f = bounds
         f.size.width = w
         f.size.height = h
         frame = f
+        bounds = CGRectMake(0, 0, w, h)
     }
     
     func SEL_pinButton(sender: UIButton) {
