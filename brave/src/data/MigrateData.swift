@@ -225,7 +225,7 @@ class MigrateData: NSObject {
                 let description = String(cString: sqlite3_column_text(results, 4))
                 let url = String(cString: sqlite3_column_text(results, 5))
                 
-                if let bk = Bookmark.addForMigration(url: url, title: title, customTitle: description, parentFolder: relationshipHash[parentid] ?? nil, isFolder: (type == 2)) {
+                if let bk = Bookmark.addForMigration(url, title: title, customTitle: description, parentFolder: relationshipHash[parentid] ?? nil, isFolder: (type == 2)) {
                     let parent = relationshipHash[parentid]
                     bk.parentFolder = parent
                     bk.syncParentUUID = parent?.syncUUID

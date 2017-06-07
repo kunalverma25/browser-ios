@@ -299,7 +299,7 @@ class Sync: JSInjector {
                 // Sync local bookmarks, then proceed with fetching
                 // Pull all local bookmarks
                 // Insane .map required for mapping obj-c class to Swift, in order to use protocol instead of class for array param
-                self.sendSyncRecords(recordType: .bookmark, action: .create, records: Bookmark.getAllBookmarks(context: DataController.shared.workerContext()).map{$0}) { error in
+                self.sendSyncRecords(recordType: .bookmark, action: .create, records: Bookmark.getAllBookmarks(DataController.shared.workerContext()).map{$0}) { error in
                     startFetching()
                 }
             } else {

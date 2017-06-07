@@ -95,7 +95,7 @@ class TabMO: NSManagedObject {
         }
     }
     
-    class func preserveTab(tab: Browser, tabManager: TabManager) {
+    class func preserveTab(_ tab: Browser, tabManager: TabManager) {
         if tab.isPrivate || tab.url?.absoluteString == nil || tab.tabID == nil {
             return
         }

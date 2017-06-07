@@ -114,7 +114,7 @@ class BookmarkEditingViewController: FormViewController {
         self.bookmarkIndexPath = indexPath
 
         // get top-level folders
-        folders = Bookmark.getFolders(bookmark: nil, context: DataController.moc)
+        folders = Bookmark.getFolders(nil, context: DataController.moc)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -128,7 +128,7 @@ class BookmarkEditingViewController: FormViewController {
             block(self)
         }
         
-        self.bookmark.update(customTitle: self.titleRow?.value, url: self.urlRow?.value, save: true)
+        self.bookmark.update(self.titleRow?.value, url: self.urlRow?.value, save: true)
     }
     
     var isEditingFolder:Bool {
@@ -198,7 +198,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
         
         self.currentFolder = folder
         self.title = folder?.displayTitle ?? Strings.Bookmarks
-        self.frc = Bookmark.frc(parentFolder: folder)
+        self.frc = Bookmark.frc(folder)
         self.frc!.delegate = self
     }
 
@@ -334,7 +334,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
     }
 
     func addFolder(titled title: String) {
-        Bookmark.add(url: nil, title: nil, customTitle: title, parentFolder: currentFolder, isFolder: true)
+        Bookmark.add(nil, title: nil, customTitle: title, parentFolder: currentFolder, isFolder: true)
     }
     
     func onEditBookmarksButton() {

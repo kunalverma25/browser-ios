@@ -226,7 +226,7 @@ extension BrowserViewController: BrowserToolbarDelegate {
                 return
         }
 
-       Bookmark.contains(url: url, completionOnMain: { isBookmarked in
+       Bookmark.contains(url, completionOnMain: { isBookmarked in
             if isBookmarked {
                 self.removeBookmark(url)
             } else {

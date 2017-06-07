@@ -21,13 +21,15 @@ let AllowThirdPartyKeyboardsKey = "settings.allowThirdPartyKeyboards"
 
 class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestoration {
     
-    public static func viewController(withRestorationIdentifierPath identifierComponents: [Any], coder: NSCoder) -> UIViewController? {
+    open static func viewController(withRestorationIdentifierPath identifierComponents: [Any], coder: NSCoder) -> UIViewController? {
         return nil
     }
     
     // TODO: Having all of these global opens up lots of abuse potential (open via getApp())
     
     var window: UIWindow?
+    var securityWindow: UIWindow?
+    var securityViewController: PinProtectOverlayViewController?
     var browserViewController: BrowserViewController!
     var rootViewController: UINavigationController!
     weak var profile: BrowserProfile?
@@ -329,7 +331,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
         }
         
         let profile = getProfile(application)
-        if profile.prefs.boolForKey(kPrefKeyBrowserLock) == true && securityWindow?.hidden == false {
+        if profile.prefs.boolForKey(kPrefKeyBrowserLock) == true && securityWindow?.isHidden == false {
             securityViewController?.auth()
         }
     }
@@ -340,14 +342,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
         BraveGlobalShieldStats.singleton.save()
         
         let profile = getProfile(application)
-        requirePinIfNeeded(profile)
+        requirePinIfNeeded(profile: profile)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
         BraveGlobalShieldStats.singleton.save()
         
         let profile = getProfile(application)
-        requirePinIfNeeded(profile)
+        requirePinIfNeeded(profile: profile)
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -359,7 +361,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
         profile?.reopen()
         
         let appProfile = getProfile(application)
-        requirePinIfNeeded(appProfile)
+        requirePinIfNeeded(profile: appProfile)
     }
     
     private func requirePinIfNeeded(profile: Profile) {
@@ -367,15 +369,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
         if profile.prefs.boolForKey(kPrefKeyBrowserLock) == true {
             if securityWindow != nil  {
                 securityViewController?.start()
-                securityWindow?.hidden = false
+                securityWindow?.isHidden = false
                 return
             }
             
             let vc = PinProtectOverlayViewController()
             securityViewController = vc
-            debugPrint(UIScreen.mainScreen().bounds)
+            debugPrint(UIScreen.main.bounds)
             
-            let pinOverlay = UIWindow(frame: UIScreen.mainScreen().bounds)
+            let pinOverlay = UIWindow(frame: UIScreen.main.bounds)
             pinOverlay.backgroundColor = UIColor(white: 0.9, alpha: 0.7)
             pinOverlay.windowLevel = UIWindowLevelAlert
             pinOverlay.rootViewController = vc
@@ -383,7 +385,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
             pinOverlay.makeKeyAndVisible()
             
             vc.successCallback = {
-                self.securityWindow?.hidden = true
+                self.securityWindow?.isHidden = true
             }
         }
     }

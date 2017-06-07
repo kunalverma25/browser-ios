@@ -519,7 +519,7 @@ extension TabManager : WKCompatNavigationDelegate {
         if let tab = tabForWebView(webView), let url = tabForWebView(webView)?.url {
             if !ErrorPageHelper.isErrorPageURL(url) {
                 postAsyncToMain(0.25) {
-                    TabMO.preserveTab(tab: tab, tabManager: self)
+                    TabMO.preserveTab(tab, tabManager: self)
                 }
             }
         }

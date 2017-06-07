@@ -686,7 +686,7 @@ class BrowserViewController: UIViewController {
 
     func addBookmark(_ url: URL?, title: String?, parentFolder: Bookmark? = nil) {
         // Custom title can only be applied during an edit
-        Bookmark.add(url: url, title: title, parentFolder: parentFolder)
+        Bookmark.add(url, title: title, parentFolder: parentFolder)
         self.urlBar.updateBookmarkStatus(true)
     }
 
@@ -748,7 +748,7 @@ class BrowserViewController: UIViewController {
             return
         }
 
-        Bookmark.contains(url: url, completionOnMain: { isBookmarked in
+        Bookmark.contains(url, completionOnMain: { isBookmarked in
             self.urlBar.updateBookmarkStatus(isBookmarked)
         })
     }
