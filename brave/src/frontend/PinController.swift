@@ -40,9 +40,8 @@ class PinViewController: UIViewController, PinViewControllerDelegate {
     override func loadView() {
         super.loadView()
         
-        pinView = PinLockView(message: "Enter New Pin")
+        pinView = PinLockView(message: Strings.PinNew)
         pinView.codeCallback = { code in
-            debugPrint("entered code: \(code)")
             let view = ConfirmPinViewController()
             view.delegate = self
             view.initialPin = code
@@ -58,7 +57,7 @@ class PinViewController: UIViewController, PinViewControllerDelegate {
             make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
         }
         
-        title = "Set Pin"
+        title = Strings.PinSet
         view.backgroundColor = UIColor(rgb: 0xF8F8F8)
     }
     
@@ -77,12 +76,9 @@ class ConfirmPinViewController: UIViewController {
     override func loadView() {
         super.loadView()
         
-        pinView = PinLockView(message: "Re-Enter New Pin")
+        pinView = PinLockView(message: Strings.PinNewRe)
         pinView.codeCallback = { code in
-            debugPrint("entered code: \(code)")
-            
             if code == self.initialPin {
-                debugPrint("code confirmed")
                 let pinLockInfo = AuthenticationKeychainInfo(passcode: code)
                 if LAContext().canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: nil) {
                     pinLockInfo.useTouchID = true
@@ -106,10 +102,10 @@ class ConfirmPinViewController: UIViewController {
             make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
         }
         
-        title = "Set Pin"
+        title = Strings.PinSet
         view.backgroundColor = UIColor(rgb: 0xF8F8F8)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(SEL_cancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: Strings.Cancel, style: .Plain, target: self, action: #selector(SEL_cancel))
     }
     
     func SEL_cancel() {
@@ -131,9 +127,8 @@ class PinProtectOverlayViewController: UIViewController {
         blur = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
         view.addSubview(blur)
         
-        pinView = PinLockView(message: "Enter Pin to Un-lock Brave")
+        pinView = PinLockView(message: Strings.PinEnterToUnlock)
         pinView.codeCallback = { code in
-            debugPrint("entered code: \(code)")
             if let pinLockInfo = KeychainWrapper.pinLockInfo() {
                 if code == pinLockInfo.passcode {
                     if self.successCallback != nil {
@@ -190,12 +185,10 @@ class PinProtectOverlayViewController: UIViewController {
         if authenticationContext.canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: &authError) {
             authenticationContext.evaluatePolicy(
                 .DeviceOwnerAuthenticationWithBiometrics,
-                localizedReason: "Only awesome people are allowed",
+                localizedReason: Strings.PinFingerprintUnlock,
                 reply: { [unowned self] (success, error) -> Void in
                     if success {
-                        if self.successCallback != nil {
-                            self.successCallback!()
-                        }
+                        self.successCallback?()
                     }
                     else {
                         self.touchCanceled = true
@@ -248,7 +241,7 @@ class PinLockView: UIView {
         
         deleteButton = UIButton()
         deleteButton.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
-        deleteButton.setTitle("Delete", forState: .Normal)
+        deleteButton.setTitle(Strings.Delete, forState: .Normal)
         deleteButton.setTitleColor(PinUX.SelectedBackgroundColor, forState: .Normal)
         deleteButton.setTitleColor(UIColor.blackColor(), forState: .Highlighted)
         deleteButton.addTarget(self, action: #selector(SEL_delete(_:)), forControlEvents: .TouchUpInside)
