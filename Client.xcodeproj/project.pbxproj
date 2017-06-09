@@ -170,6 +170,8 @@
 		5C0FCE621E63E1D90016DF0F /* SyncCodewordsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FCE611E63E1D90016DF0F /* SyncCodewordsView.swift */; };
 		5C0FCE641E63EA170016DF0F /* SyncPairWordsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FCE631E63EA170016DF0F /* SyncPairWordsViewController.swift */; };
 		5C0FCE661E63EB8B0016DF0F /* SyncCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FCE651E63EB8B0016DF0F /* SyncCameraView.swift */; };
+		5C1F62471ECA9406001EB26C /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C1F623E1ECA93F3001EB26C /* LocalAuthentication.framework */; };
+		5C1F62491ECAA8CD001EB26C /* PinController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C1F62481ECAA8CD001EB26C /* PinController.swift */; };
 		5C32C7B6034B41A9C822555E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE1D74E40F9E392FFCE9F2F /* main.swift */; };
 		5C404E1B2531DC2E178F80F8 /* ReaderPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C87651157C51F01D4D96F /* ReaderPanel.swift */; };
 		5C44C0CF1E3847A100B1FD81 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C44C0C21E38479200B1FD81 /* CoreData.framework */; };
@@ -177,6 +179,7 @@
 		5C44C0D71E3C08B400B1FD81 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C44C0D61E3C08B400B1FD81 /* Bookmark.swift */; };
 		5C44C0DA1E3EE42D00B1FD81 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C44C0D91E3EE42D00B1FD81 /* Domain.swift */; };
 		5C44C0DE1E3EE47B00B1FD81 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C44C0DD1E3EE47B00B1FD81 /* History.swift */; };
+		5C5DDEC51ED71E2800669CEC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C5DDEC41ED71E2800669CEC /* AudioToolbox.framework */; };
 		5C67126F8B355442E99D9EDB /* BrowserViewController+FindInPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA9175CB5140E6C4D47DC15 /* BrowserViewController+FindInPage.swift */; };
 		5C6F1B1D1E67433F008B0ADD /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6F1B1C1E67433F008B0ADD /* CoreImage.framework */; };
 		5C82452C1E68E95600D3CA09 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C82452B1E68E95600D3CA09 /* AVFoundation.framework */; };
@@ -968,12 +971,15 @@
 		5C0FCE611E63E1D90016DF0F /* SyncCodewordsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncCodewordsView.swift; path = brave/src/frontend/sync/SyncCodewordsView.swift; sourceTree = "<group>"; };
 		5C0FCE631E63EA170016DF0F /* SyncPairWordsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncPairWordsViewController.swift; path = brave/src/frontend/sync/SyncPairWordsViewController.swift; sourceTree = "<group>"; };
 		5C0FCE651E63EB8B0016DF0F /* SyncCameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncCameraView.swift; path = brave/src/frontend/sync/SyncCameraView.swift; sourceTree = "<group>"; };
+		5C1F623E1ECA93F3001EB26C /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		5C1F62481ECAA8CD001EB26C /* PinController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinController.swift; path = brave/src/frontend/PinController.swift; sourceTree = "<group>"; };
 		5C39A9721F0FECF98A48015E /* BraveBrowserViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BraveBrowserViewController.swift; path = ./brave/src/frontend/BraveBrowserViewController.swift; sourceTree = "<group>"; };
 		5C44C0C21E38479200B1FD81 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5C44C0D11E384AE700B1FD81 /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataController.swift; path = brave/src/data/DataController.swift; sourceTree = "<group>"; };
 		5C44C0D61E3C08B400B1FD81 /* Bookmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bookmark.swift; path = brave/src/data/Bookmark.swift; sourceTree = "<group>"; };
 		5C44C0D91E3EE42D00B1FD81 /* Domain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Domain.swift; path = brave/src/data/Domain.swift; sourceTree = "<group>"; };
 		5C44C0DD1E3EE47B00B1FD81 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = History.swift; path = brave/src/data/History.swift; sourceTree = "<group>"; };
+		5C5DDEC41ED71E2800669CEC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		5C6F1B1C1E67433F008B0ADD /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		5C82452B1E68E95600D3CA09 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5CD7F38D1E3EFBF100A12BB9 /* FaviconMO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FaviconMO.swift; path = brave/src/data/FaviconMO.swift; sourceTree = "<group>"; };
@@ -1441,6 +1447,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C5DDEC51ED71E2800669CEC /* AudioToolbox.framework in Frameworks */,
+				5C1F62471ECA9406001EB26C /* LocalAuthentication.framework in Frameworks */,
 				5C82452C1E68E95600D3CA09 /* AVFoundation.framework in Frameworks */,
 				5C6F1B1D1E67433F008B0ADD /* CoreImage.framework in Frameworks */,
 				5C44C0CF1E3847A100B1FD81 /* CoreData.framework in Frameworks */,
@@ -1591,6 +1599,7 @@
 				5C0FCE4B1E5FB32F0016DF0F /* sync */,
 				3A6E86EA8E9535F4C6C7B748 /* tabsbar */,
 				5CE70E441E022FAB008B307A /* BraveShieldStatsView.swift */,
+				5C1F62481ECAA8CD001EB26C /* PinController.swift */,
 			);
 			name = frontend;
 			sourceTree = "<group>";
@@ -2250,6 +2259,8 @@
 		928B373CD06CCFB1407180F1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5C5DDEC41ED71E2800669CEC /* AudioToolbox.framework */,
+				5C1F623E1ECA93F3001EB26C /* LocalAuthentication.framework */,
 				5C82452B1E68E95600D3CA09 /* AVFoundation.framework */,
 				5C6F1B1C1E67433F008B0ADD /* CoreImage.framework */,
 				5C44C0C21E38479200B1FD81 /* CoreData.framework */,
@@ -4038,6 +4049,7 @@
 				A4997544E81DF456966522E6 /* BraveShieldState.swift in Sources */,
 				F0EA069256DABEECB329C591 /* binding.gyp in Sources */,
 				2F0860C25F7367CEED17E283 /* HttpsEverywhere.cpp in Sources */,
+				5C1F62491ECAA8CD001EB26C /* PinController.swift in Sources */,
 				A2F643975578B7DA57C4B7A4 /* HttpsEverywhereObjC.mm in Sources */,
 				A026D2C7D56306D65820F5EA /* LICENSE in Sources */,
 				16B5C378276A21598A9BFD31 /* Makefile in Sources */,
