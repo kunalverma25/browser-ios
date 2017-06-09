@@ -131,12 +131,8 @@ class Sync: JSInjector {
     }
     
     func leaveSyncGroup() {
+        // No, `leaving` logic should be here, any related logic should be in `syncSeed` setter
         syncSeed = nil
-        if let device = Device.currentDevice() {
-            // TODO: Find better way to handle deletions
-            self.sendSyncRecords(.prefs, action: .delete, records: [device])
-            // TODO: Remove ALL devices, since using solf deletes, this will just set isCurrentDevice = false for currentDevice
-        }
     }
     
     /// Sets up sync to actually start pulling/pushing data. This method can only be called once
@@ -214,9 +210,12 @@ class Sync: JSInjector {
             // Leave group:
             
             // Clean up group specific items
-            
             // TODO: Update all records with originalSyncSeed
             
+            if let device = Device.currentDevice() {
+                // Not even verified if this works on the sync side.
+                self.sendSyncRecords(.prefs, action: .delete, records: [device])
+            }
             
             Device.deleteAll {}
             
@@ -392,7 +391,7 @@ extension Sync {
         // TODO: Abstract this logic, same used as in getExistingObjects
         guard let recordJSON = data?.rootElements, let apiRecodType = data?.arg1, let recordType = SyncRecordType(rawValue: apiRecodType) else { return }
         
-        guard var fetchedRecords = recordType.fetchedModelType?.syncRecords3(recordJSON) else { return }
+        guard var fetchedRecords = recordType.fetchedModelType?.syncRecords(recordJSON) else { return }
 
         // Currently only prefs are device related
         if recordType == .prefs, let data = fetchedRecords as? [SyncDevice] {
@@ -480,14 +479,14 @@ extension Sync {
         
         guard let recordJSON = data?.rootElements, let apiRecodType = data?.arg1, let recordType = SyncRecordType(rawValue: apiRecodType) else { return }
 
-        guard let records2 = recordType.fetchedModelType?.syncRecords3(recordJSON) else { return }
+        guard let fetchedRecords = recordType.fetchedModelType?.syncRecords(recordJSON) else { return }
 
-        let ids = records2.map { $0.objectId }.flatMap { $0 }
+        let ids = fetchedRecords.map { $0.objectId }.flatMap { $0 }
         let localbookmarks = recordType.coredataModelType?.get(syncUUIDs: ids, context: DataController.shared.workerContext()) as? [Bookmark]
         
         
         var matchedBookmarks = [[AnyObject]]()
-        for fetchedBM in records2 {
+        for fetchedBM in fetchedRecords {
             
             // TODO: Replace with find(where:) in Swift3
             var localBM: AnyObject = "null"
