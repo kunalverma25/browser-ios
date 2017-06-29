@@ -20,12 +20,14 @@ struct PinUX {
             }
         }
     }
+    private static let DefaultForegroundColor = UIColor(rgb: 0x4a4a4a)
     private static let DefaultBackgroundColor = UIColor.clearColor()
-    private static let SelectedBackgroundColor = UIColor(rgb: 0x696969)
+    private static let SelectedBackgroundColor = BraveUX.BraveOrange
     private static let DefaultBorderWidth: CGFloat = 1.0
     private static let SelectedBorderWidth: CGFloat = 0.0
-    private static let DefaultBorderColor = UIColor(rgb: 0x696969).CGColor
+    private static let DefaultBorderColor = UIColor(rgb: 0x4a4a4a).CGColor
     private static let IndicatorSize: CGSize = CGSize(width: 14, height: 14)
+    private static let IndicatorSpacing: CGFloat = 17.0
 }
 
 protocol PinViewControllerDelegate {
@@ -193,7 +195,10 @@ class PinProtectOverlayViewController: UIViewController {
                 })
         }
         else {
-            debugPrint(authError)
+            self.touchCanceled = true
+            postAsyncToMain {
+                self.pinView.hidden = false
+            }
         }
     }
 }
@@ -215,7 +220,7 @@ class PinLockView: UIView {
         messageLabel = UILabel()
         messageLabel.text = message
         messageLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
-        messageLabel.textColor = PinUX.SelectedBackgroundColor
+        messageLabel.textColor = PinUX.DefaultForegroundColor
         messageLabel.sizeToFit()
         addSubview(messageLabel)
         
@@ -236,7 +241,7 @@ class PinLockView: UIView {
         deleteButton = UIButton()
         deleteButton.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
         deleteButton.setTitle(Strings.Delete, forState: .Normal)
-        deleteButton.setTitleColor(PinUX.SelectedBackgroundColor, forState: .Normal)
+        deleteButton.setTitleColor(PinUX.DefaultForegroundColor, forState: .Normal)
         deleteButton.setTitleColor(UIColor.blackColor(), forState: .Highlighted)
         deleteButton.addTarget(self, action: #selector(SEL_delete(_:)), forControlEvents: .TouchUpInside)
         deleteButton.sizeToFit()
@@ -357,7 +362,7 @@ class PinIndicatorView: UIView {
     convenience init(size: Int) {
         self.init()
         
-        defaultColor = PinUX.SelectedBackgroundColor
+        defaultColor = PinUX.DefaultForegroundColor
         
         for i in 0..<size {
             let view = UIView()
@@ -375,7 +380,7 @@ class PinIndicatorView: UIView {
     }
     
     override func layoutSubviews() {
-        let spaceX: CGFloat = 10
+        let spaceX: CGFloat = PinUX.IndicatorSpacing
         var x: CGFloat = 0
         for i in 0..<indicators.count {
             let view = indicators[i]
@@ -407,6 +412,7 @@ class PinIndicatorView: UIView {
         for i in 0..<index {
             let view = indicators[i]
             view.backgroundColor = PinUX.SelectedBackgroundColor
+            view.layer.borderColor = PinUX.SelectedBackgroundColor.CGColor
         }
         
         // Clear additional
@@ -414,6 +420,7 @@ class PinIndicatorView: UIView {
             for i in index..<indicators.count {
                 let view = indicators[i]
                 view.layer.borderWidth = PinUX.DefaultBorderWidth
+                view.layer.borderColor = PinUX.DefaultBorderColor
                 view.backgroundColor = UIColor.clearColor()
             }
         }
@@ -441,7 +448,7 @@ class PinButton: UIControl {
         titleLabel.userInteractionEnabled = false
         titleLabel.textAlignment = .Center
         titleLabel.font = UIFont.systemFontOfSize(30, weight: UIFontWeightMedium)
-        titleLabel.textColor = PinUX.SelectedBackgroundColor
+        titleLabel.textColor = PinUX.DefaultForegroundColor
         titleLabel.backgroundColor = UIColor.clearColor()
         addSubview(titleLabel)
         setNeedsDisplay()
@@ -454,16 +461,14 @@ class PinButton: UIControl {
     override var highlighted: Bool {
         didSet {
             if (highlighted) {
-                UIView.animateWithDuration(0.1, animations: {
-                    self.backgroundColor = PinUX.SelectedBackgroundColor
-                    self.titleLabel.textColor = UIColor.whiteColor()
-                })
+                backgroundColor = PinUX.SelectedBackgroundColor
+                titleLabel.textColor = UIColor.whiteColor()
+                layer.borderColor = PinUX.SelectedBackgroundColor.CGColor
             }
             else {
-                UIView.animateWithDuration(0.1, animations: {
-                    self.backgroundColor = UIColor.clearColor()
-                    self.titleLabel.textColor = PinUX.SelectedBackgroundColor
-                })
+                backgroundColor = UIColor.clearColor()
+                titleLabel.textColor = PinUX.DefaultForegroundColor
+                layer.borderColor = PinUX.DefaultBorderColor
             }
         }
     }
