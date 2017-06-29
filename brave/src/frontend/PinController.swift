@@ -20,12 +20,14 @@ struct PinUX {
             }
         }
     }
+    private static let DefaultForegroundColor = UIColor(rgb: 0x4a4a4a)
     private static let DefaultBackgroundColor = UIColor.clearColor()
-    private static let SelectedBackgroundColor = UIColor(rgb: 0x696969)
+    private static let SelectedBackgroundColor = BraveUX.BraveOrange
     private static let DefaultBorderWidth: CGFloat = 1.0
     private static let SelectedBorderWidth: CGFloat = 0.0
-    private static let DefaultBorderColor = UIColor(rgb: 0x696969).CGColor
+    private static let DefaultBorderColor = UIColor(rgb: 0x4a4a4a).CGColor
     private static let IndicatorSize: CGSize = CGSize(width: 14, height: 14)
+    private static let IndicatorSpacing: CGFloat = 17.0
 }
 
 protocol PinViewControllerDelegate {
@@ -40,9 +42,8 @@ class PinViewController: UIViewController, PinViewControllerDelegate {
     override func loadView() {
         super.loadView()
         
-        pinView = PinLockView(message: "Enter New Pin")
+        pinView = PinLockView(message: Strings.PinNew)
         pinView.codeCallback = { code in
-            debugPrint("entered code: \(code)")
             let view = ConfirmPinViewController()
             view.delegate = self
             view.initialPin = code
@@ -51,14 +52,12 @@ class PinViewController: UIViewController, PinViewControllerDelegate {
         view.addSubview(pinView)
         
         let pinViewSize = pinView.frame.size
-        let xEdge = (view.frame.width - pinViewSize.width) / 2
-        let yEdge = (view.frame.height - pinViewSize.height) / 2
-        
         pinView.snp_makeConstraints { (make) in
-            make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
+            make.size.equalTo(pinViewSize)
+            make.center.equalTo(self.view.center).offset(CGPointMake(0, 0))
         }
         
-        title = "Set Pin"
+        title = Strings.PinSet
         view.backgroundColor = UIColor(rgb: 0xF8F8F8)
     }
     
@@ -77,12 +76,9 @@ class ConfirmPinViewController: UIViewController {
     override func loadView() {
         super.loadView()
         
-        pinView = PinLockView(message: "Re-Enter New Pin")
+        pinView = PinLockView(message: Strings.PinNewRe)
         pinView.codeCallback = { code in
-            debugPrint("entered code: \(code)")
-            
             if code == self.initialPin {
-                debugPrint("code confirmed")
                 let pinLockInfo = AuthenticationKeychainInfo(passcode: code)
                 if LAContext().canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: nil) {
                     pinLockInfo.useTouchID = true
@@ -99,17 +95,15 @@ class ConfirmPinViewController: UIViewController {
         view.addSubview(pinView)
         
         let pinViewSize = pinView.frame.size
-        let xEdge = (view.frame.width - pinViewSize.width) / 2
-        let yEdge = (view.frame.height - pinViewSize.height) / 2
-        
         pinView.snp_makeConstraints { (make) in
-            make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
+            make.size.equalTo(pinViewSize)
+            make.center.equalTo(self.view.center).offset(CGPointMake(0, 0))
         }
         
-        title = "Set Pin"
+        title = Strings.PinSet
         view.backgroundColor = UIColor(rgb: 0xF8F8F8)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(SEL_cancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: Strings.Cancel, style: .Plain, target: self, action: #selector(SEL_cancel))
     }
     
     func SEL_cancel() {
@@ -131,9 +125,8 @@ class PinProtectOverlayViewController: UIViewController {
         blur = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
         view.addSubview(blur)
         
-        pinView = PinLockView(message: "Enter Pin to Un-lock Brave")
+        pinView = PinLockView(message: Strings.PinEnterToUnlock)
         pinView.codeCallback = { code in
-            debugPrint("entered code: \(code)")
             if let pinLockInfo = KeychainWrapper.pinLockInfo() {
                 if code == pinLockInfo.passcode {
                     if self.successCallback != nil {
@@ -149,15 +142,13 @@ class PinProtectOverlayViewController: UIViewController {
         view.addSubview(pinView)
         
         let pinViewSize = pinView.frame.size
-        let xEdge = (UIScreen.mainScreen().bounds.width - pinViewSize.width) / 2
-        let yEdge = (UIScreen.mainScreen().bounds.height - pinViewSize.height) / 2
-        
         pinView.snp_makeConstraints { (make) in
-            make.edges.equalTo(CGPoint(x: xEdge, y: yEdge))
+            make.size.equalTo(pinViewSize)
+            make.center.equalTo(self.view.center).offset(CGPointMake(0, 0))
         }
         
         blur.snp_makeConstraints { (make) in
-            make.edges.equalTo(view.self)
+            make.edges.equalTo(self.view)
         }
         
         start()
@@ -190,12 +181,10 @@ class PinProtectOverlayViewController: UIViewController {
         if authenticationContext.canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: &authError) {
             authenticationContext.evaluatePolicy(
                 .DeviceOwnerAuthenticationWithBiometrics,
-                localizedReason: "Only awesome people are allowed",
+                localizedReason: Strings.PinFingerprintUnlock,
                 reply: { [unowned self] (success, error) -> Void in
                     if success {
-                        if self.successCallback != nil {
-                            self.successCallback!()
-                        }
+                        self.successCallback?()
                     }
                     else {
                         self.touchCanceled = true
@@ -206,7 +195,10 @@ class PinProtectOverlayViewController: UIViewController {
                 })
         }
         else {
-            debugPrint(authError)
+            self.touchCanceled = true
+            postAsyncToMain {
+                self.pinView.hidden = false
+            }
         }
     }
 }
@@ -228,7 +220,7 @@ class PinLockView: UIView {
         messageLabel = UILabel()
         messageLabel.text = message
         messageLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
-        messageLabel.textColor = PinUX.SelectedBackgroundColor
+        messageLabel.textColor = PinUX.DefaultForegroundColor
         messageLabel.sizeToFit()
         addSubview(messageLabel)
         
@@ -248,21 +240,19 @@ class PinLockView: UIView {
         
         deleteButton = UIButton()
         deleteButton.titleLabel?.font = UIFont.systemFontOfSize(16, weight: UIFontWeightMedium)
-        deleteButton.setTitle("Delete", forState: .Normal)
-        deleteButton.setTitleColor(PinUX.SelectedBackgroundColor, forState: .Normal)
+        deleteButton.setTitle(Strings.Delete, forState: .Normal)
+        deleteButton.setTitleColor(PinUX.DefaultForegroundColor, forState: .Normal)
         deleteButton.setTitleColor(UIColor.blackColor(), forState: .Highlighted)
         deleteButton.addTarget(self, action: #selector(SEL_delete(_:)), forControlEvents: .TouchUpInside)
         deleteButton.sizeToFit()
         addSubview(deleteButton)
         
-        setNeedsLayout()
-        layoutIfNeeded()
-        
+        layoutSubviews()
         sizeToFit()
     }
     
     override func layoutSubviews() {
-        let spaceX: CGFloat = (min(UIScreen.mainScreen().bounds.width - 20, 350) - PinUX.ButtonSize.width * 3) / 4
+        let spaceX: CGFloat = (350 - PinUX.ButtonSize.width * 3) / 4
         let spaceY: CGFloat = spaceX
         let w: CGFloat = PinUX.ButtonSize.width
         let h: CGFloat = PinUX.ButtonSize.height
@@ -315,10 +305,11 @@ class PinLockView: UIView {
         
         let w = button9.frame.maxX
         let h = button0.frame.maxY
-        var f = frame
+        var f = bounds
         f.size.width = w
         f.size.height = h
         frame = f
+        bounds = CGRectMake(0, 0, w, h)
     }
     
     func SEL_pinButton(sender: UIButton) {
@@ -371,7 +362,7 @@ class PinIndicatorView: UIView {
     convenience init(size: Int) {
         self.init()
         
-        defaultColor = PinUX.SelectedBackgroundColor
+        defaultColor = PinUX.DefaultForegroundColor
         
         for i in 0..<size {
             let view = UIView()
@@ -389,7 +380,7 @@ class PinIndicatorView: UIView {
     }
     
     override func layoutSubviews() {
-        let spaceX: CGFloat = 10
+        let spaceX: CGFloat = PinUX.IndicatorSpacing
         var x: CGFloat = 0
         for i in 0..<indicators.count {
             let view = indicators[i]
@@ -421,6 +412,7 @@ class PinIndicatorView: UIView {
         for i in 0..<index {
             let view = indicators[i]
             view.backgroundColor = PinUX.SelectedBackgroundColor
+            view.layer.borderColor = PinUX.SelectedBackgroundColor.CGColor
         }
         
         // Clear additional
@@ -428,6 +420,7 @@ class PinIndicatorView: UIView {
             for i in index..<indicators.count {
                 let view = indicators[i]
                 view.layer.borderWidth = PinUX.DefaultBorderWidth
+                view.layer.borderColor = PinUX.DefaultBorderColor
                 view.backgroundColor = UIColor.clearColor()
             }
         }
@@ -455,7 +448,7 @@ class PinButton: UIControl {
         titleLabel.userInteractionEnabled = false
         titleLabel.textAlignment = .Center
         titleLabel.font = UIFont.systemFontOfSize(30, weight: UIFontWeightMedium)
-        titleLabel.textColor = PinUX.SelectedBackgroundColor
+        titleLabel.textColor = PinUX.DefaultForegroundColor
         titleLabel.backgroundColor = UIColor.clearColor()
         addSubview(titleLabel)
         setNeedsDisplay()
@@ -468,16 +461,14 @@ class PinButton: UIControl {
     override var highlighted: Bool {
         didSet {
             if (highlighted) {
-                UIView.animateWithDuration(0.1, animations: {
-                    self.backgroundColor = PinUX.SelectedBackgroundColor
-                    self.titleLabel.textColor = UIColor.whiteColor()
-                })
+                backgroundColor = PinUX.SelectedBackgroundColor
+                titleLabel.textColor = UIColor.whiteColor()
+                layer.borderColor = PinUX.SelectedBackgroundColor.CGColor
             }
             else {
-                UIView.animateWithDuration(0.1, animations: {
-                    self.backgroundColor = UIColor.clearColor()
-                    self.titleLabel.textColor = PinUX.SelectedBackgroundColor
-                })
+                backgroundColor = UIColor.clearColor()
+                titleLabel.textColor = PinUX.DefaultForegroundColor
+                layer.borderColor = PinUX.DefaultBorderColor
             }
         }
     }
