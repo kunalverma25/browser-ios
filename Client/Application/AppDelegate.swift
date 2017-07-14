@@ -232,6 +232,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
 
         BraveApp.didFinishLaunching()
         
+        let appProfile = getProfile(application)
+        requirePinIfNeeded(profile: appProfile)
+        
         return shouldPerformAdditionalDelegateHandling
     }
 

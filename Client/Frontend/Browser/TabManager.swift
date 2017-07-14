@@ -238,7 +238,9 @@ class TabManager : NSObject {
     
     // Basically a dispatch once, prevents mulitple calls
     lazy var restoreTabs: () = {
-        self.restoreTabsInternal()
+        postAsyncToMain {
+            self.restoreTabsInternal()
+        }
     }()
     
     fileprivate func restoreTabsInternal() {
@@ -359,7 +361,7 @@ class TabManager : NSObject {
         }
 
         tab.navigationDelegate = navDelegate
-        tab.loadRequest(request ?? defaultNewTabRequest)
+        _ = tab.loadRequest(request ?? defaultNewTabRequest)
     }
 
     // This method is duplicated to hide the flushToDisk option from consumers.
@@ -482,7 +484,7 @@ extension TabManager {
         }
 
         if getApp().tabManager.tabs.internalTabList.count < 1 {
-            getApp().tabManager.addTab()
+            _ = getApp().tabManager.addTab()
         }
         getApp().tabManager.selectTab(getApp().tabManager.tabs.displayedTabsForCurrentPrivateMode.first)
         getApp().browserViewController.urlBar.updateTabsBarShowing()
@@ -519,7 +521,7 @@ extension TabManager : WKCompatNavigationDelegate {
         if let tab = tabForWebView(webView), let url = tabForWebView(webView)?.url {
             if !ErrorPageHelper.isErrorPageURL(url) {
                 postAsyncToMain(0.25) {
-                    TabMO.preserveTab(tab, tabManager: self)
+                    TabMO.preserveTab(tab: tab)
                 }
             }
         }
