@@ -388,7 +388,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIViewControllerRestorati
             pinOverlay.makeKeyAndVisible()
             
             vc.successCallback = {
-                self.securityWindow?.isHidden = true
+                postAsyncToMain {
+                    self.securityWindow?.isHidden = true
+                }
             }
         }
     }
