@@ -114,7 +114,7 @@ class BookmarkEditingViewController: FormViewController {
         self.bookmarkIndexPath = indexPath
 
         // get top-level folders
-        folders = Bookmark.getFolders(nil, context: DataController.moc)
+        folders = Bookmark.getFolders(bookmark: nil, context: DataController.shared.mainThreadContext)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -122,13 +122,13 @@ class BookmarkEditingViewController: FormViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+        super.viewWillDisappear(animated)
         //called when we're about to be popped, so use this for callback
         if let block = self.completionBlock {
             block(self)
         }
         
-        self.bookmark.update(self.titleRow?.value, url: self.urlRow?.value, save: true)
+        self.bookmark.update(customTitle: self.titleRow?.value, url: self.urlRow?.value, save: true)
     }
     
     var isEditingFolder:Bool {
@@ -198,8 +198,10 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
         
         self.currentFolder = folder
         self.title = folder?.displayTitle ?? Strings.Bookmarks
-        self.frc = Bookmark.frc(folder)
+        self.frc = Bookmark.frc(parentFolder: folder)
         self.frc!.delegate = self
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadData), name: NotificationMainThreadContextSignificantlyChanged, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -208,6 +210,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
 
     deinit {
         NotificationCenter.default.removeObserver(self, name: NotificationFirefoxAccountChanged, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NotificationMainThreadContextSignificantlyChanged, object: nil)
     }
 
     override func viewDidLoad() {
@@ -245,7 +248,6 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
     }
 
     override func reloadData() {
-        DataController.saveContext()
 
         do {
             try self.frc?.performFetch()
@@ -253,7 +255,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
             print(error.description)
         }
 
-        self.tableView.reloadData()
+        super.reloadData()
     }
     
     func disableTableEditingMode() {
@@ -317,7 +319,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
         }
 
         // TODO: Needs to be recursive
-        currentFolder.remove()
+        currentFolder.remove(save: true)
 
         self.navigationController?.popViewController(animated: true)
     }
@@ -334,7 +336,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
     }
 
     func addFolder(titled title: String) {
-        Bookmark.add(nil, title: nil, customTitle: title, parentFolder: currentFolder, isFolder: true)
+        Bookmark.add(url: nil, title: nil, customTitle: title, parentFolder: currentFolder, isFolder: true)
     }
     
     func onEditBookmarksButton() {
@@ -371,7 +373,7 @@ class BookmarksPanel: SiteTableViewController, HomePanel {
         // If I save while the animation is happening, the rows look screwed up (draw on top of each other).
         // Adding a delay to let animation complete avoids this problem
         postAsyncToMain(0.25) {
-            DataController.saveContext()
+            DataController.saveContext(context: self.frc?.managedObjectContext)
         }
     }
 
