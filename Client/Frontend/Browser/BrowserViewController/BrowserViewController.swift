@@ -688,7 +688,7 @@ class BrowserViewController: UIViewController {
 
     func addBookmark(_ url: URL?, title: String?, parentFolder: Bookmark? = nil) {
         // Custom title can only be applied during an edit
-        _ = Bookmark.add(url, title: title, parentFolder: parentFolder)
+        _ = Bookmark.add(url: url, title: title, parentFolder: parentFolder)
         self.urlBar.updateBookmarkStatus(true)
     }
 
@@ -750,9 +750,8 @@ class BrowserViewController: UIViewController {
             return
         }
 
-        Bookmark.contains(url, completionOnMain: { isBookmarked in
-            self.urlBar.updateBookmarkStatus(isBookmarked)
-        })
+        let isBookmarked = Bookmark.contains(url: url, context: DataController.shared.mainThreadContext)
+        self.urlBar.updateBookmarkStatus(isBookmarked)
     }
     // Mark: Opening New Tabs
 

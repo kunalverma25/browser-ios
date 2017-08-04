@@ -44,7 +44,7 @@ class _SearchLoader<UnusedA, UnusedB>: Loader<[Site], SearchViewController> {
         context.perform {
             
             let history: [WebsitePresentable] = History.frecencyQuery(context, containing: containing)
-            let bookmarks: [WebsitePresentable] = Bookmark.frecencyQuery(context, containing: containing)
+            let bookmarks: [WebsitePresentable] = Bookmark.frecencyQuery(context: context, containing: containing)
 
             // History must come before bookmarks, since later items replace existing ones, and want bookmarks to replace history entries
             let uniqueSites = Set<Site>( (history + bookmarks).map { Site(url: $0.url ?? "", title: $0.title ?? "", bookmarked: $0 is Bookmark) } )

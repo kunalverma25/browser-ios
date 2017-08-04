@@ -187,7 +187,7 @@ class Bookmark: NSManagedObject, WebsitePresentable, Syncable {
     
     // TODO: DELETE
     // Aways uses main context
-    class func add(_ url: URL?,
+    class func add(url: URL?,
                        title: String?,
                        customTitle: String? = nil, // Folders only use customTitle
                        parentFolder:Bookmark? = nil,
@@ -209,7 +209,7 @@ class Bookmark: NSManagedObject, WebsitePresentable, Syncable {
     // TODO: Migration syncUUIDS still needs to be solved
     // Should only ever be used for migration from old db
     // Always uses worker context
-    class func addForMigration(_ url: String?, title: String, customTitle: String, parentFolder: Bookmark?, isFolder: Bool?) -> Bookmark? {
+    class func addForMigration(url: String?, title: String, customTitle: String, parentFolder: Bookmark?, isFolder: Bool?) -> Bookmark? {
         
         let site = SyncSite()
         site.title = title
@@ -224,20 +224,17 @@ class Bookmark: NSManagedObject, WebsitePresentable, Syncable {
         return self.add(rootObject: bookmark, save: true, context: DataController.shared.workerContext)
     }
 
-    class func contains(_ url: URL, completionOnMain completion: @escaping ((Bool)->Void)) {
+    class func contains(url: URL, context: NSManagedObjectContext) -> Bool {
         var found = false
-        let context = DataController.shared.workerContext
-        context.perform {
+        context.performAndWait {
             if let count = get(forUrl: url, countOnly: true, context: context) as? Int {
                 found = count > 0
             }
-            postAsyncToMain {
-                completion(found)
-            }
         }
+        return found
     }
 
-    class func frecencyQuery(_ context: NSManagedObjectContext, containing: String?) -> [Bookmark] {
+    class func frecencyQuery(context: NSManagedObjectContext, containing: String?) -> [Bookmark] {
         assert(!Thread.isMainThread)
 
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
