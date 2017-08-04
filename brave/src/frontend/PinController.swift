@@ -167,6 +167,7 @@ class PinProtectOverlayViewController: UIViewController {
     }
     
     func start() {
+        getApp().browserViewController.view.endEditing(true)
         pinView.isHidden = true
         touchCanceled = false
     }
