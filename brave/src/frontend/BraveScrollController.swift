@@ -104,7 +104,7 @@ class BraveScrollController: NSObject {
     }
     
     func keyboardDidAppear(_ notification: Notification){
-        checkHeightOfPageAndAdjustWebViewInsets()
+        checkHeightOfPageAndAdjustWebViewInsets(true)
     }
 
     func keyboardWillDisappear(_ notification: Notification){
@@ -143,7 +143,7 @@ class BraveScrollController: NSObject {
     }
     
     // This causes issue #216 if contentInset changed during a load
-    func checkHeightOfPageAndAdjustWebViewInsets() {
+    func checkHeightOfPageAndAdjustWebViewInsets(_ overlay: Bool = false) {
 
         if RuntimeInsetChecks.isZoomingCheck {
             return
@@ -156,7 +156,7 @@ class BraveScrollController: NSObject {
             RuntimeInsetChecks.isRunningCheck = true
             postAsyncToMain(0.2) {
                 RuntimeInsetChecks.isRunningCheck = false
-                self.checkHeightOfPageAndAdjustWebViewInsets()
+                self.checkHeightOfPageAndAdjustWebViewInsets(overlay)
             }
         } else {
             RuntimeInsetChecks.isRunningCheck = false
@@ -171,7 +171,9 @@ class BraveScrollController: NSObject {
                 let bottom = BraveApp.isIPhonePortrait() ? min(((UIApplication.shared.keyWindow?.frame ?? CGRect.zero).maxY - (footer?.frame ?? CGRect.zero).minY), 0) : 0
                 let oh = BraveApp.isIPhonePortrait() ? (header?.frame.height ?? 0) + (footer?.frame.height ?? 0) : (footer?.frame.height ?? 0)
                 let h = keyboardIsShowing ? oh : (top + bottom)
-                setBottomInset(h)
+                if !overlay && !keyboardIsShowing {
+                    setBottomInset(h)
+                }
             }
         }
     }
@@ -207,9 +209,15 @@ class BraveScrollController: NSObject {
         defer {
             entrantGuard = false
         }
+        
+        print(change, context, object)
+        print((object as? UIScrollView)?.superview?.isFirstResponder)
+        
         if (keyPath ?? "") == "contentSize" { // && browser?.webView?.scrollView === object {
             browser?.webView?.contentSizeChangeDetected()
-            checkHeightOfPageAndAdjustWebViewInsets()
+            postAsyncToMain(0.2) {
+                self.checkHeightOfPageAndAdjustWebViewInsets()
+            }
             if !isScrollHeightIsLargeEnoughForScrolling() && !toolbarsShowing {
                 showToolbars(animated: true, completion: nil)
             }
