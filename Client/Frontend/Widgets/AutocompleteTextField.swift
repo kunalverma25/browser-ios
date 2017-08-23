@@ -134,9 +134,9 @@ class AutocompleteTextField: UITextField, UITextFieldDelegate {
 
         if completionActive {
             if string.isEmpty && range.length > 0 {
-                    // Characters are being deleted, so clear the autocompletion, but don't change the text.
-                    removeCompletion()
-                    return false
+                // Characters are being deleted, so clear the autocompletion, but don't change the text.
+                removeCompletion()
+                return false
             }
             removeCompletionIfRequiredForEnteredString(string)
         }
