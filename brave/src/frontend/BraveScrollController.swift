@@ -143,7 +143,7 @@ class BraveScrollController: NSObject {
     }
     
     // This causes issue #216 if contentInset changed during a load
-    func checkHeightOfPageAndAdjustWebViewInsets(_ overlay: Bool = false) {
+    func checkHeightOfPageAndAdjustWebViewInsets(_ didKeyboardAppear: Bool = false) {
 
         if RuntimeInsetChecks.isZoomingCheck {
             return
@@ -156,7 +156,7 @@ class BraveScrollController: NSObject {
             RuntimeInsetChecks.isRunningCheck = true
             postAsyncToMain(0.2) {
                 RuntimeInsetChecks.isRunningCheck = false
-                self.checkHeightOfPageAndAdjustWebViewInsets(overlay)
+                self.checkHeightOfPageAndAdjustWebViewInsets(didKeyboardAppear)
             }
         } else {
             RuntimeInsetChecks.isRunningCheck = false
@@ -171,7 +171,7 @@ class BraveScrollController: NSObject {
                 let bottom = BraveApp.isIPhonePortrait() ? min(((UIApplication.shared.keyWindow?.frame ?? CGRect.zero).maxY - (footer?.frame ?? CGRect.zero).minY), 0) : 0
                 let oh = BraveApp.isIPhonePortrait() ? (header?.frame.height ?? 0) + (footer?.frame.height ?? 0) : (footer?.frame.height ?? 0)
                 let h = keyboardIsShowing ? oh : (top + bottom)
-                if !overlay && !keyboardIsShowing {
+                if !didKeyboardAppear && !keyboardIsShowing {
                     setBottomInset(h)
                 }
             }
@@ -210,11 +210,9 @@ class BraveScrollController: NSObject {
             entrantGuard = false
         }
         
-        print(change, context, object)
-        print((object as? UIScrollView)?.superview?.isFirstResponder)
-        
         if (keyPath ?? "") == "contentSize" { // && browser?.webView?.scrollView === object {
             browser?.webView?.contentSizeChangeDetected()
+            //Slight delay allows the keyboardDidAppear to be called first and adjust textfield positioning.
             postAsyncToMain(0.2) {
                 self.checkHeightOfPageAndAdjustWebViewInsets()
             }
