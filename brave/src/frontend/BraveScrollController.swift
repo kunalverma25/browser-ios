@@ -156,7 +156,7 @@ class BraveScrollController: NSObject {
             RuntimeInsetChecks.isRunningCheck = true
             postAsyncToMain(0.2) {
                 RuntimeInsetChecks.isRunningCheck = false
-                self.checkHeightOfPageAndAdjustWebViewInsets(keyboardAppeared)
+                self.checkHeightOfPageAndAdjustWebViewInsets(keyboardAppeared: keyboardAppeared)
             }
         } else {
             RuntimeInsetChecks.isRunningCheck = false
